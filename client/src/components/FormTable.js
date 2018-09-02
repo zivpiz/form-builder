@@ -14,11 +14,7 @@ class FormTable extends Component {
         var formRows = [];
         this.props.forms.forEach((form) => {
             formRows.push(
-                <FormRow formId={form.formId} formName={form.formName}
-                         key={form._id}
-                         numOfSubmissions={form.numOfSubmissions}
-                         submitPageURL={form.submitPageURL}
-                         submissionPageURL={form.submissionsPageURL}/>);
+                <FormRow form={form} key={form._id} />);
         });
         return (formRows);
     };
