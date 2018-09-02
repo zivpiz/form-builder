@@ -23,10 +23,11 @@ On the first command prompt, enter the server directory and type 'nodemon server
 \server> nodemon server.js
 ```
 
-On the second command prompt, enter the client directory and type 'npm start'.
+On the second command prompt, enter the client directory and type 'npm install', then 'npm start'.
 
 ```
 > cd client
+\client> npm install
 \client> npm start
 ```
 
