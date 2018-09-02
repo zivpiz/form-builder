@@ -15,7 +15,7 @@ https://docs.mongodb.com/manual/administration/install-community/
 
 ### Installing
 
-Clone the repo to your local machine and open two command prompts.
+Clone or download the repo to your local machine and open two command prompts.
 On the first command prompt, enter the server directory and type 'nodemon server.js'.
 
 ```
