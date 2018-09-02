@@ -4,28 +4,26 @@ import FormRow from './FormRow.js';
 
 class FormTable extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
 
-        //Bind functions
         this.formRowsArray = this.formRowsArray.bind(this);
     }
 
-
-    formRowsArray = () =>{
+    formRowsArray = () => {
         var formRows = [];
-        this.props.forms.forEach((form) =>{
+        this.props.forms.forEach((form) => {
             formRows.push(
                 <FormRow formId={form.formId} formName={form.formName}
                          key={form._id}
                          numOfSubmissions={form.numOfSubmissions}
                          submitPageURL={form.submitPageURL}
-                         submissionPageURL={form.submissionsPageURL} />);
+                         submissionPageURL={form.submissionsPageURL}/>);
         });
         return (formRows);
     };
 
-    render(){
+    render() {
         return (
             <table className="table">
                 <thead className="thead-light">
@@ -38,7 +36,9 @@ class FormTable extends Component {
                 </tr>
                 </thead>
                 <tbody>
-                {this.props.forms.length ? this.formRowsArray(): ''}
+                {this.props.forms.length ? this.formRowsArray() : <tr>
+                    <td>Loading...</td>
+                </tr>}
                 </tbody>
             </table>
         )

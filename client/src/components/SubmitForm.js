@@ -10,7 +10,7 @@ class SubmitForm extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {form: {}, submission: []};
+        this.state = {form: {}, submission: [], submitEnabled: true};
 
         this.fieldRowsArray = this.fieldRowsArray.bind(this);
         this.updateSubmission = this.updateSubmission.bind(this);
@@ -47,9 +47,10 @@ class SubmitForm extends Component {
 
     fieldRowsArray = () => {
         var fieldRows = [];
+        var key = 0;
         this.state.form.fields.forEach((field) => {
             fieldRows.push(
-                <SubmitFormRow field={field} updateData={this.updateSubmission}/>
+                <SubmitFormRow key={++key} field={field} updateData={this.updateSubmission}/>
             );
         });
         return (fieldRows);
@@ -57,8 +58,23 @@ class SubmitForm extends Component {
 
     handleSubmit(event) {
         event.preventDefault();
-        http.addSubmission(this.state.form.formId, this.state.submission);
-        window.location.replace("http://localhost:3000/");
+        if (this.state.submitEnabled) {
+            this.setState({submitEnabled: false});
+            var valid = true;
+            this.state.submission.forEach((sub) => {
+                if (sub.input === '') {
+                    valid = false;
+                }
+            });
+            if (valid) {
+                http.addSubmission(this.state.form.formId, this.state.submission);
+                window.location.replace("http://localhost:3000/");
+            }
+            else {
+                this.setState({submitEnabled: true});
+                alert('Not all form fields are entered');
+            }
+        }
     }
 
 
@@ -77,9 +93,11 @@ class SubmitForm extends Component {
                             </tr>
                             </thead>
                             <tbody>
-                            {this.state.submission.length ? this.fieldRowsArray() : ''}
+                            {this.state.submission.length ? this.fieldRowsArray() : <tr>
+                                <td>Loading...</td>
+                            </tr>}
                             <tr>
-                                <td colspan="3">
+                                <td colSpan="3">
                                     <button type="submit" value="Submit" className="btn btn-lg btn-primary">Submit Form
                                     </button>
                                 </td>

@@ -3,17 +3,14 @@ var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var db = mongoose.connect('mongodb://localhost/db', {useNewUrlParser: true});
+var Form = require('./model/form');
 const cors = require('cors');
-
-//app.use(cors());
+const port = 3004;
 
 app.use(cors({
     origin: 'http://localhost:3000',
     credentials: true
 }));
-
-var Form = require('./model/form');
-const port = 3004;
 
 var lastUsedID;
 Form.find({}, (err, forms) => {
@@ -24,14 +21,12 @@ Form.find({}, (err, forms) => {
     }
 });
 
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
 app.get('/', (req, res) => {
     res.send('Welcome to the API');
 });
-
 
 //Add a new form to the db
 app.post('/home/addForm', (req, res) => {
@@ -51,7 +46,6 @@ app.post('/home/addForm', (req, res) => {
     })
 });
 
-
 //Allow all requests from all domains & localhost
 app.all('/*', function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -64,7 +58,6 @@ app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
-
 
 //Get list of all forms
 app.get('/home', (req, res) => {
@@ -100,6 +93,7 @@ app.post('/home/:formID/submit', (req, res) => {
     });
 });
 
+//Get a single form by ID
 app.get('/home/:formID', (req, res) => {
     var formID = req.params.formID;
     Form.findOne({formId: formID}, (err, formFound) => {

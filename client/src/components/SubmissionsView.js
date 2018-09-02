@@ -31,9 +31,10 @@ class SubmissionsView extends Component {
 
     createTableHeaders = () => {
         var allHeaders = [];
+        var key = 0;
         this.state.form.submissions[0].forEach((sub) => {
             allHeaders.push(
-                <th scope="col">{sub.inputName}</th>
+                <th key={++key} scope="col">{sub.inputName}</th>
             );
         });
         return allHeaders;
@@ -41,9 +42,10 @@ class SubmissionsView extends Component {
 
     createTableBody = () => {
         var body = [];
+        var key = 0;
         this.state.form.submissions.forEach((sub) => {
             body.push(
-                <tr>
+                <tr key={++key}>
                     {this.createTableRow(sub)}
                 </tr>
             );
@@ -53,14 +55,11 @@ class SubmissionsView extends Component {
 
     createTableRow = (sub) => {
         var row = [];
+        var key = 0;
         sub.forEach((field) => {
-            var colorStyle:{
-                backgroundColor: field.input
-            };
-
             row.push(
-                <td style ={field.inputType === 'color'? {backgroundColor: field.input} : {}}>
-                    {field.inputType !== 'color' ? field.input: ''}
+                <td key={++key} style={field.inputType === 'color' ? {backgroundColor: field.input} : {}}>
+                    {field.inputType !== 'color' ? field.input : ''}
                 </td>
             );
         });
@@ -76,11 +75,13 @@ class SubmissionsView extends Component {
                     <table className="table">
                         <thead className="thead-light">
                         <tr>
-                            {this.state.loading ? '' : this.createTableHeaders()}
+                            {this.state.loading ? <td>Loading...</td> : this.createTableHeaders()}
                         </tr>
                         </thead>
                         <tbody>
-                        {this.state.loading ? '' : this.createTableBody()}
+                        {this.state.loading ? <tr>
+                            <td>Loading...</td>
+                        </tr> : this.createTableBody()}
                         </tbody>
                     </table>
                 </div>

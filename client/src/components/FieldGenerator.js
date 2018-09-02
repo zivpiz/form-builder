@@ -4,30 +4,37 @@ import React from "react";
 class FieldGenerator extends Component {
     constructor(props) {
         super(props);
-        this.state = {fieldLabel: '', inputName: '', inputType: 'text'};
+        this.state = {fieldLabel: '', inputName: '', inputType: 'text', submitEnabled: true};
 
         this.handleLabelChange = this.handleLabelChange.bind(this);
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handleTypeChange = this.handleTypeChange.bind(this);
-
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     handleLabelChange(event) {
-        this.setState({fieldLabel: event.target.value});
+        this.setState({fieldLabel: event.target.value, submitEnabled: true});
     }
 
     handleNameChange(event) {
-        this.setState({inputName: event.target.value});
+        this.setState({inputName: event.target.value, submitEnabled: true});
     }
 
     handleTypeChange(event) {
-        this.setState({inputType: event.target.value});
+        this.setState({inputType: event.target.value, submitEnabled: true});
     }
 
     handleSubmit(event) {
         event.preventDefault();
-        this.props.sendData(this.state);
+        if (this.state.submitEnabled) {
+            if (this.state.inputName === '' || this.state.fieldLabel === '') {
+                alert('Must have a field label and an input name');
+            }
+            else {
+                this.setState({submitEnabled: false});
+                this.props.sendData(this.state);
+            }
+        }
     }
 
 

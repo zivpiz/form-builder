@@ -3,29 +3,33 @@ import React from "react";
 
 class FieldsView extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
 
-        //Bind functions
         this.fieldRowsArray = this.fieldRowsArray.bind(this);
+        this.capitalizeFirstLetter = this.capitalizeFirstLetter.bind(this);
     }
 
+    capitalizeFirstLetter = (string) => {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    };
 
-    fieldRowsArray = () =>{
+    fieldRowsArray = () => {
         var fields = [];
-        this.props.entries.forEach((field) =>{
+        var key = 0;
+        this.props.entries.forEach((field) => {
             fields.push(
-                <tr>
+                <tr key={++key}>
                     <td>{field.fieldLabel}</td>
                     <td>{field.inputName}</td>
-                    <td>{field.inputType}</td>
+                    <td>{this.capitalizeFirstLetter(field.inputType)}</td>
                 </tr>
             );
         });
         return (fields);
     };
 
-    render(){
+    render() {
         return (
             <table className="table">
                 <thead className="thead-light">

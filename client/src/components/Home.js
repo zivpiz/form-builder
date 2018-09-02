@@ -13,7 +13,6 @@ class App extends Component {
         super(props);
         this.state = {forms: []};
 
-        //Bind functions
         this.loadData = this.loadData.bind(this);
     }
 
@@ -34,12 +33,12 @@ class App extends Component {
 
     render() {
         return (
-                <div className="Home">
-                    <NavigationBar/>
-                    <div className="container" id="main-page">
-                        <FormTable forms={this.state.forms}/>
-                    </div>
+            <div className="Home">
+                <NavigationBar/>
+                <div className="container" id="main-page">
+                    <FormTable forms={this.state.forms}/>
                 </div>
+            </div>
         )
 
     }

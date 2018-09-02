@@ -5,13 +5,10 @@ import SubmitForm from "./components/SubmitForm.js"
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 import SubmissionsView from "./components/SubmissionsView";
 
-
-
 class App extends Component {
 
     render() {
         return (
-
             <Router>
                 <div className="App">
                     <Route path="/" exact strict component={Home}/>
@@ -21,10 +18,8 @@ class App extends Component {
                 </div>
             </Router>
         )
-
     }
 }
-
 
 export default App;
 

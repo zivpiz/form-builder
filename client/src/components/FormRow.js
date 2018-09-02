@@ -3,14 +3,13 @@ import React from "react";
 import {Link} from 'react-router-dom';
 
 
-class FormRow extends Component{
+class FormRow extends Component {
 
-
-    render(){
+    render() {
         var formId = this.props.formId;
-        var submitURL = '/submit/'+formId;
-        var viewSubmissionsURL = '/view/'+formId;
-        return(
+        var submitURL = '/submit/' + formId;
+        var viewSubmissionsURL = '/view/' + formId;
+        return (
             <tr>
                 <th scope="row">{formId}</th>
                 <td>{this.props.formName}</td>

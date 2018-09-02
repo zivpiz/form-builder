@@ -12,7 +12,7 @@ class BuildForm extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {entries: [], formName: ""};
+        this.state = {entries: [], formName: "", buttonEnabled: true};
         this.getEntry = this.getEntry.bind(this);
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -39,8 +39,16 @@ class BuildForm extends Component {
 
     handleSubmit(event) {
         event.preventDefault();
-        http.addNewForm(this.state);
-        window.location.replace("http://localhost:3000/");
+        if (this.state.buttonEnabled) {
+            if (this.state.formName === '' || this.state.entries.length === 0) {
+                alert('Must enter at least one field and a form name');
+            }
+            else {
+                this.setState({buttonEnabled: false});
+                http.addNewForm(this.state);
+                window.location.replace("http://localhost:3000/");
+            }
+        }
     }
 
 
