@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {loadReCaptcha} from 'react-recaptcha-google'
 import Home from './components/Home.js';
 import BuildForm from "./components/BuildForm.js";
 import SubmitForm from "./components/SubmitForm.js"
@@ -6,6 +7,10 @@ import {BrowserRouter as Router, Route} from 'react-router-dom';
 import SubmissionsView from "./components/SubmissionsView";
 
 class App extends Component {
+
+    componentDidMount(){
+        loadReCaptcha();
+    }
 
     render() {
         return (

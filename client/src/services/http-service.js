@@ -35,12 +35,13 @@ class HttpService {
         });
     }
 
-    addSubmission(formId, newSubmission) {
+    addSubmission(formId, newSubmission, recaptchaToken) {
         var requestURL = 'http://localhost:3004/home/' + formId + '/submit';
+        var body = JSON.stringify({submission: newSubmission, recaptchaToken:recaptchaToken})
         fetch(requestURL, {
             method: 'POST',
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(newSubmission)
+            body: body
         });
     }
 

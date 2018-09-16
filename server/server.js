@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
+var request = require('request');
 var mongoose = require('mongoose');
 var db = mongoose.connect('mongodb://localhost/db', {useNewUrlParser: true});
 var Form = require('./model/form');
@@ -73,23 +74,40 @@ app.get('/home', (req, res) => {
 
 //Add a submission to a form.
 app.post('/home/:formID/submit', (req, res) => {
+
+    if (req.body.recaptchaToken === undefined ||
+        req.body.recaptchaToken === '' ||
+        req.body.recaptchaToken === null) {
+        res.status(500).send({error: 'Please select Recaptcha'});
+        return;
+    }
     var formID = req.params.formID;
-    Form.findOne({formId: formID}, (err, formFound) => {
-        if (err) {
-            res.status(500).send({error: 'Could not find specific form.'});
+    var secretKey = "6LczeXAUAAAAABd_E4ypRPRZ4fY8rjqH5c1MQU0e";
+    var verifyUrl = "https://www.google.com/recaptcha/api/siteverify?secret=" + secretKey + "&response=" + req.body.recaptchaToken;
+    request(verifyUrl, (err, response, body) => {
+        body = JSON.parse(body);
+        if (body.success !== undefined && !body.success) {
+            res.status(500).send({error: 'Failed to verify captcha token'});
+            return;
         }
-        else {
-            formFound.submissions.push(req.body);
+        console.log('verified, saving submission');
+        Form.findOne({formId: formID}, (err, formFound) => {
+            if (err) {
+                res.status(500).send({error: 'Could not find specific form.'});
+                return;
+            }
+            formFound.submissions.push(req.body.submission);
             formFound.numOfSubmissions = formFound.numOfSubmissions + 1;
             formFound.save((err, savedForm) => {
                 if (err) {
                     res.status(500).send({error: "Form Update failed."});
+                    return;
                 }
-                else {
-                    res.status(200).send(savedForm);
-                }
+                console.log('saved!');
+                console.log(savedForm);
+                res.status(200).send(savedForm);
             })
-        }
+        });
     });
 });
 

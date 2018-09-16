@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {ReCaptcha} from 'react-recaptcha-google';
 import NavigationBar from "./NavigationBar.js";
 import HttpService from '../services/http-service.js'
 import './Styles.css'
@@ -10,14 +11,17 @@ class SubmitForm extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {form: {}, submission: [], submitEnabled: true};
+        this.state = {form: {}, submission: [], recaptchaToken: '', submitEnabled: true};
 
         this.fieldRowsArray = this.fieldRowsArray.bind(this);
         this.updateSubmission = this.updateSubmission.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.onLoadCallback = this.onLoadCallback.bind(this);
+        this.verifyCallback = this.verifyCallback.bind(this);
     }
 
     componentDidMount() {
+        this.recaptchaRef.reset();
         var formId = this.props.match.params.formId;
         var self = this;
         http.loadForm(formId)
@@ -57,26 +61,41 @@ class SubmitForm extends Component {
     };
 
     handleSubmit(event) {
-        event.preventDefault();
-        if (this.state.submitEnabled) {
-            this.setState({submitEnabled: false});
-            var valid = true;
-            this.state.submission.forEach((sub) => {
-                if (sub.input === '') {
-                    valid = false;
+        if (this.state.recaptchaToken === '') {
+            alert('Please select Recaptcha');
+        }
+        else {
+            event.preventDefault();
+            if (this.state.submitEnabled) {
+                this.setState({submitEnabled: false});
+                var valid = true;
+                this.state.submission.forEach((sub) => {
+                    if (sub.input === '') {
+                        valid = false;
+                    }
+                });
+                if (valid) {
+                    http.addSubmission(this.state.form.formId, this.state.submission, this.state.recaptchaToken);
+                    window.location.replace("http://localhost:3000/");
                 }
-            });
-            if (valid) {
-                http.addSubmission(this.state.form.formId, this.state.submission);
-                window.location.replace("http://localhost:3000/");
-            }
-            else {
-                this.setState({submitEnabled: true});
-                alert('Not all form fields are entered');
+                else {
+                    this.setState({submitEnabled: true});
+                    alert('Not all form fields are entered');
+                }
             }
         }
     }
 
+    onLoadCallback(){
+        if(this.recaptchaRef){
+            this.recaptchaRef.reset();
+        }
+    }
+
+    verifyCallback(recaptchaToken){
+        this.setState({recaptchaToken});
+        console.log(this.state.recaptchaToken)
+    }
 
     render() {
         return (
@@ -98,6 +117,16 @@ class SubmitForm extends Component {
                             </tr>}
                             <tr>
                                 <td colSpan="3">
+                                    <div className="form-group">
+                                    <ReCaptcha
+                                        ref={(el) => {this.recaptchaRef = el;}}
+                                        size="normal"
+                                        render="explicit"
+                                        sitekey="6LczeXAUAAAAAMq4zyaS8aJaEdfHyozK7AMwQvV4"
+                                        onloadCallback={this.onLoadCallback}
+                                        verifyCallback={this.verifyCallback}
+                                    />
+                                    </div>
                                     <button type="submit" value="Submit" className="btn btn-lg btn-primary">Submit Form
                                     </button>
                                 </td>
